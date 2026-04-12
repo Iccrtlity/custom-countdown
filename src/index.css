@@ -1,54 +1,56 @@
-/* Basis-Design */
+/* Reset & Base */
+* { box-sizing: border-box; }
 body {
   margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #f0f2f5;
-  color: #333;
+  font-family: 'Inter', system-ui, sans-serif;
+  background-color: #f4f4f5;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
 }
 
-/* Container für deine App */
 .app-container {
-  max-width: 500px;
-  margin: 50px auto;
-  padding: 30px;
+  width: 100%;
+  max-width: 400px;
   background: white;
+  min-height: 90vh;
+  padding: 24px;
   border-radius: 20px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
-/* Input-Felder */
+/* Links & Text */
+a { text-decoration: none; color: inherit; display: block; }
+
+/* Buttons & Inputs */
 input {
   width: 100%;
   padding: 12px;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
+  border: 1px solid #d1d5db;
   border-radius: 10px;
-  border: 1px solid #ddd;
-  box-sizing: border-box;
+  font-size: 15px;
 }
-
-/* Button */
 button {
   width: 100%;
   padding: 12px;
-  background-color: #58cc02;
+  background: #111827;
   color: white;
   border: none;
   border-radius: 10px;
+  font-weight: 600;
   cursor: pointer;
-  font-weight: bold;
-  transition: background 0.2s;
+  margin-bottom: 10px;
 }
+button:hover { background: #374151; }
 
-button:hover {
-  background-color: #46a302;
-}
-
-/* Lektions-Karten */
-.lesson-card {
-  padding: 15px;
+/* Bibliothek-Karten mit sichtbarem Rahmen */
+.card {
+  padding: 16px;
   border-radius: 12px;
-  margin-top: 15px;
-  border-left: 5px solid #58cc02;
-  background: #fdfdfd;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  background: white;
+  border: 2px solid #e5e7eb; /* Sichtbarer Rahmen */
+  margin-bottom: 12px;
+  transition: border-color 0.2s;
 }
+.card:hover { border-color: #3b82f6; } /* Highlight bei Hover */
