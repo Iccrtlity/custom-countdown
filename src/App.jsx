@@ -2,65 +2,53 @@ import { useState, useEffect } from 'react';
 
 function App() {
   const [lessons, setLessons] = useState(() => JSON.parse(localStorage.getItem('myLessons')) || []);
-  const [activeLesson, setActiveLesson] = useState(null); // Welche Lektion wird gerade gelernt?
-  const [currentQIndex, setCurrentQIndex] = useState(0); // Welche Frage der Lektion?
-  
-  // Editor States
   const [lessonTitle, setLessonTitle] = useState('');
-  const [question, setQuestion] = useState('');
-  const [answer, setAnswer] = useState('');
-  const [tempQuestions, setTempQuestions] = useState([]);
+  const [currentQuestions, setCurrentQuestions] = useState([]);
+  const [qText, setQText] = useState('');
+  const [qAnswer, setQAnswer] = useState('');
 
   useEffect(() => {
     localStorage.setItem('myLessons', JSON.stringify(lessons));
   }, [lessons]);
 
-  const addTempQuestion = () => {
-    if (!question || !answer) return;
-    setTempQuestions([...tempQuestions, { text: question, answer }]);
-    setQuestion(''); setAnswer('');
+  const addQuestion = () => {
+    if (!qText || !qAnswer) return;
+    setCurrentQuestions([...currentQuestions, { text: qText, answer: qAnswer }]);
+    setQText(''); setQAnswer('');
   };
 
   const saveLesson = () => {
-    if (!lessonTitle || tempQuestions.length === 0) return;
-    setLessons([...lessons, { title: lessonTitle, questions: tempQuestions }]);
-    setLessonTitle(''); setTempQuestions([]);
+    if (!lessonTitle || currentQuestions.length === 0) return;
+    setLessons([...lessons, { title: lessonTitle, questions: currentQuestions }]);
+    setLessonTitle('');
+    setCurrentQuestions([]);
   };
-
-  // Quiz Logik
-  const startQuiz = (lesson) => setActiveLesson(lesson);
 
   return (
     <div className="app-container">
-      {activeLesson ? (
-        // Quiz Ansicht
-        <div>
-          <button onClick={() => setActiveLesson(null)}>Zurück zur Bibliothek</button>
-          <h2>{activeLesson.title}</h2>
-          <div className="lesson-card">
-            <p>{activeLesson.questions[currentQIndex].text}</p>
-            <p style={{ color: '#58cc02' }}>Antwort: {activeLesson.questions[currentQIndex].answer}</p>
-          </div>
-          <button onClick={() => setCurrentQIndex((prev) => (prev + 1) % activeLesson.questions.length)}>Nächste Frage</button>
+      <h1>Lektion erstellen</h1>
+      <input placeholder="Titel der Lektion (z.B. Spanisch Vokabeln)" value={lessonTitle} onChange={(e) => setLessonTitle(e.target.value)} />
+      
+      <div style={{ background: '#f9f9f9', padding: '15px', borderRadius: '10px' }}>
+        <input placeholder="Frage" value={qText} onChange={(e) => setQText(e.target.value)} />
+        <input placeholder="Antwort" value={qAnswer} onChange={(e) => setQAnswer(e.target.value)} />
+        <button onClick={addQuestion} style={{ backgroundColor: '#2b82c9' }}>Frage hinzufügen</button>
+      </div>
+
+      <h3 style={{ marginTop: '20px' }}>Fragen in dieser Lektion ({currentQuestions.length})</h3>
+      {currentQuestions.map((q, i) => <div key={i} className="lesson-card"><strong>Q:</strong> {q.text} | <strong>A:</strong> {q.answer}</div>)}
+      
+      <button onClick={saveLesson} style={{ marginTop: '20px', backgroundColor: '#58cc02' }}>Lektion in Bibliothek speichern</button>
+
+      <hr style={{ margin: '40px 0' }} />
+
+      <h2>Deine Bibliothek ({lessons.length})</h2>
+      {lessons.map((l, i) => (
+        <div key={i} className="lesson-card">
+          <h4 style={{ margin: '0 0 10px' }}>{l.title}</h4>
+          <p>{l.questions.length} Fragen enthalten</p>
         </div>
-      ) : (
-        // Editor Ansicht
-        <div>
-          <h1>Lektion Editor</h1>
-          <input placeholder="Titel" value={lessonTitle} onChange={(e) => setLessonTitle(e.target.value)} />
-          <input placeholder="Frage" value={question} onChange={(e) => setQuestion(e.target.value)} />
-          <input placeholder="Antwort" value={answer} onChange={(e) => setAnswer(e.target.value)} />
-          <button onClick={addTempQuestion}>Frage hinzufügen</button>
-          <button onClick={saveLesson} style={{ backgroundColor: '#58cc02' }}>Lektion speichern</button>
-          
-          <h2>Bibliothek</h2>
-          {lessons.map((l, i) => (
-            <div key={i} className="lesson-card" onClick={() => startQuiz(l)} style={{ cursor: 'pointer' }}>
-              <strong>{l.title}</strong> ({l.questions.length} Fragen)
-            </div>
-          ))}
-        </div>
-      )}
+      ))}
     </div>
   );
 }
