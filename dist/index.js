@@ -1,3 +1,5 @@
+import pc from "picocolors";
+
 export function startCountdown(seconds, onTick, onComplete) {
   let counter = seconds;
 
@@ -6,6 +8,7 @@ export function startCountdown(seconds, onTick, onComplete) {
 
     if (counter <= 0) {
       clearInterval(interval);
+      console.log(pc.green("Blast off! 🚀")); 
       if (onComplete) onComplete();
     }
     
