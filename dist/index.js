@@ -1,13 +1,14 @@
-export function startCountdown(seconds) {
+export function startCountdown(seconds, onTick, onComplete) {
   let counter = seconds;
 
   const interval = setInterval(() => {
-    console.log(`Countdown: ${counter}s`);
-    counter--;
+    if (onTick) onTick(counter);
 
-    if (counter < 0) {
+    if (counter <= 0) {
       clearInterval(interval);
-      console.log("Blast off! 🚀");
+      if (onComplete) onComplete();
     }
+    
+    counter--;
   }, 1000);
 }
