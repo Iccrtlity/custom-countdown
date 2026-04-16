@@ -1,23 +1,35 @@
 #!/usr/bin/env node
-
-import { startCountdown } from "../dist/index.js";
+import { startCountdown, getSecondsUntil } from "../dist/index.js";
 import pc from "picocolors";
 
-// process.argv holds the words you typed in the terminal
-// [0] is node, [1] is the script path, [2] is your first argument
 const input = process.argv[2];
-const seconds = parseInt(input);
 
-if (isNaN(seconds)) {
-  console.log(pc.red("Error: Please provide a number of seconds."));
-  console.log("Usage: countdown <seconds>");
+if (!input) {
+  console.log(pc.red("Error: Please provide seconds or a time (HH:MM)."));
   process.exit(1);
 }
 
-console.log(pc.cyan(`Starting a ${seconds}s countdown...`));
+let seconds;
+
+if (input.includes(':')) {
+  seconds = getSecondsUntil(input);
+  console.log(pc.cyan(`Target time set: ${input}. Starting countdown...`));
+} else {
+  seconds = parseInt(input);
+}
+
+if (isNaN(seconds) || seconds < 0) {
+  console.log(pc.red("Invalid input. Use a number or HH:MM format."));
+  process.exit(1);
+}
 
 startCountdown(
   seconds,
-  (time) => console.log(pc.yellow(`Remaining: ${time}s`)),
-  () => console.log(pc.green("Finished!"))
+  (time) => {
+    const h = Math.floor(time / 3600).toString().padStart(2, '0');
+    const m = Math.floor((time % 3600) / 60).toString().padStart(2, '0');
+    const s = (time % 60).toString().padStart(2, '0');
+    process.stdout.write(pc.yellow(`\rTime remaining: ${h}:${m}:${s} `));
+  },
+  () => console.log(pc.green("Target reached!"))
 );
