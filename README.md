@@ -4,7 +4,7 @@
 ![NPM Downloads](https://img.shields.io/npm/dw/@mrlostgamer/custom-countdown)
 ![License](https://img.shields.io/github/license/Iccrtlity/custom-countdown)
 
-**A professional, colorized terminal countdown utility and library.** Built to move beyond "vibecoding" into structured, high-quality JavaScript development.
+**A professional, colorized terminal countdown utility and library.** Built to move beyond messy code into structured, high-quality JavaScript development.
 
 ---
 
