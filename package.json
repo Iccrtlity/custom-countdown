@@ -1,6 +1,6 @@
 {
   "name": "@mrlostgamer/custom-countdown",
-  "version": "3.0.1",
+  "version": "4.0.0",
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
