@@ -1,0 +1,13 @@
+{
+  "name": "@mrlostgamer/custom-countdown",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iccrtlity/custom-countdown.git"
+  },
+  "bugs": {
+    "url": "https://github.com/iccrtlity/custom-countdown/issues"
+  },
+  "homepage": "https://github.com/iccrtlity/custom-countdown#readme"
+}
