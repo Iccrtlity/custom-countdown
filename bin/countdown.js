@@ -2,26 +2,32 @@
 import { startCountdown, getSecondsUntil } from "../dist/index.js";
 import pc from "picocolors";
 
-const input = process.argv[2];
+const args = process.argv.slice(2);
+const isFullscreen = args.includes("-f");
+const input = args.find(arg => arg !== "-f");
 
 if (!input) {
   console.log(pc.red("Error: Please provide seconds or a time (HH:MM)."));
-  console.log("Usage: countdown <seconds>/<time>"); 
- process.exit(1);
+  console.log("Usage: countdown [option]  <seconds>/<time>");   
+  console.log("  -f                  Enjoy the countdown in fullscreen");
+process.exit(1);
 }
 
-let seconds;
+let seconds = input.includes(':') ? getSecondsUntil(input) : parseInt(input);
 
-if (input.includes(':')) {
-  seconds = getSecondsUntil(input);
-  console.log(pc.cyan(`Target time set: ${input}. Starting countdown...`));
-} else {
-  seconds = parseInt(input);
-}
-
-if (isNaN(seconds) || seconds < 0) {
-  console.log(pc.red("Invalid input. Use a number or HH:MM format."));
-  process.exit(1);
+function printCentered(text) {
+  const cols = process.stdout.columns || 80;
+  const rows = process.stdout.rows || 24;
+  
+  if (isFullscreen) {
+    process.stdout.write("\x1Bc"); 
+    const verticalPadding = "\n".repeat(Math.floor(rows / 2));
+    const horizontalPadding = " ".repeat(Math.max(0, Math.floor((cols - text.length) / 2)));
+    
+    process.stdout.write(verticalPadding + horizontalPadding + text + verticalPadding);
+  } else {
+    process.stdout.write("\r" + pc.yellow(text));
+  }
 }
 
 startCountdown(
@@ -30,7 +36,12 @@ startCountdown(
     const h = Math.floor(time / 3600).toString().padStart(2, '0');
     const m = Math.floor((time % 3600) / 60).toString().padStart(2, '0');
     const s = (time % 60).toString().padStart(2, '0');
-    process.stdout.write(pc.yellow(`\rTime remaining: ${h}:${m}:${s} `));
+    
+    const display = isFullscreen ? `[ ${h}:${m}:${s} ]` : `Remaining: ${h}:${m}:${s}`;
+    printCentered(pc.yellow(display));
   },
-  () => console.log(pc.green("Target reached!"))
+  () => {
+    if (isFullscreen) process.stdout.write("\x1Bc");
+    console.log(pc.green("\nTarget reached! 🚀"));
+  }
 );
