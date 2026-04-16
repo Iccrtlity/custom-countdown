@@ -6,7 +6,8 @@ const input = process.argv[2];
 
 if (!input) {
   console.log(pc.red("Error: Please provide seconds or a time (HH:MM)."));
-  process.exit(1);
+  console.log("Usage: countdown <seconds>/<time>"); 
+ process.exit(1);
 }
 
 let seconds;
