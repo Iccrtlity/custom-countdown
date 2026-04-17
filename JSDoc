@@ -1,0 +1,14 @@
+/**
+ * Starts a countdown timer in the console.
+ * @param {number} seconds - The duration in seconds.
+ * @param {Function} [onTick] - Callback executed every second with remaining time.
+ * @param {Function} [onComplete] - Callback executed when timer hits zero.
+ */
+export function startCountdown(seconds, onTick, onComplete) { ... }
+
+/**
+ * Calculates seconds remaining until a specific 24h time.
+ * @param {string} timeString - Format "HH:MM".
+ * @returns {number} Seconds until that time.
+ */
+export function getSecondsUntil(timeString) { ... }
