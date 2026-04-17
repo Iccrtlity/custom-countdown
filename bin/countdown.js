@@ -24,6 +24,10 @@ function getBigText(text) {
   });
 }
 
+if (isFullscreen) {
+  process.stdout.write("\x1Bc\x1B[?25l");
+}
+
 startCountdown(
   seconds,
   async (time) => {
@@ -38,21 +42,27 @@ startCountdown(
       const cols = process.stdout.columns || 80;
       const lines = bigText.split('\n');
       
-      process.stdout.write("\x1Bc"); 
-      
-      const paddingTop = "\n".repeat(Math.max(0, Math.floor((rows - lines.length) / 2)));
-      process.stdout.write(paddingTop);
+      let output = "\x1B[H"; 
+      const paddingTopCount = Math.max(0, Math.floor((rows - lines.length) / 2));
+      output += "\n".repeat(paddingTopCount);
 
       lines.forEach(line => {
         const paddingLeft = " ".repeat(Math.max(0, Math.floor((cols - line.length) / 2)));
-        process.stdout.write(paddingLeft + pc.yellow(line) + "\n");
+        output += paddingLeft + pc.yellow(line) + "\n";
       });
+
+      process.stdout.write(output);
     } else {
       process.stdout.write("\r" + pc.yellow(`Remaining: ${timeString}`));
     }
   },
   () => {
-    if (isFullscreen) process.stdout.write("\x1Bc");
+    if (isFullscreen) process.stdout.write("\x1B[?25h\x1Bc");
     console.log(pc.green("\nTarget reached! 🚀"));
   }
 );
+
+process.on('SIGINT', () => {
+  if (isFullscreen) process.stdout.write("\x1B[?25h");
+  process.exit();
+});
